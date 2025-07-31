@@ -1,150 +1,219 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:signin_signup/Controllers/auth_controllers.dart';
-import 'package:signin_signup/views/models/user_model.dart';
+import 'package:signin_signup/Controllers/home_page_controller.dart';
+import 'package:signin_signup/Widgets/my_text_form_field.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomePage extends StatelessWidget {
+  HomePage({super.key});
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-AuthControllers authControllers = Get.put(AuthControllers());
-
-class _HomePageState extends State<HomePage> {
-  UserModel? currentUser;
-  bool isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    loadUser();
-  }
-
-  Future<void> loadUser() async {
-    SharedPreferences sp = await SharedPreferences.getInstance();
-    final uid = sp.getString('uid');
-
-    if (uid != null && uid.isNotEmpty) {
-      final userDoc =
-          await FirebaseFirestore.instance.collection('users').doc(uid).get();
-
-      if (userDoc.exists) {
-        currentUser = UserModel.fromJson(userDoc.data()!);
-      }
-    }
-
-    setState(() {
-      isLoading = false;
-    });
-  }
+  HomePageController homePageController = Get.put(HomePageController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Home Page'),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: 20,
+        ),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 100,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: MyTextFormField(
+                controller: homePageController.nameController,
+                hintText: 'Name',
+                icon: Icon(Icons.person),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: MyTextFormField(
+                controller: homePageController.nameController,
+                hintText: 'User Name',
+                icon: Icon(Icons.person),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: MyTextFormField(
+                controller: homePageController.nameController,
+                hintText: 'Email',
+                icon: Icon(Icons.email),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: MyTextFormField(
+                controller: homePageController.nameController,
+                hintText: 'Date of Birth',
+                icon: Icon(Icons.calendar_month),
+              ),
+            ),
+          ],
+        ),
       ),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : currentUser != null
-              ? Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        StreamBuilder(
-                          stream: FirebaseFirestore.instance
-                              .collection('users')
-                              .snapshots(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.active) {
-                              if (snapshot.hasData) {
-                                return ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  itemCount: snapshot.data!.docs.length,
-                                  itemBuilder: (context, index) {
-                                    return Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 20),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          CircleAvatar(
-                                            radius: 25,
-                                            backgroundColor:
-                                                Colors.grey.shade300,
-                                            backgroundImage: AssetImage(snapshot
-                                                .data!
-                                                .docs[index]['userImage']),
-                                          ),
-                                          Text(
-                                              'Name: ${snapshot.data!.docs[index]['name']}'),
-                                          Text(
-                                              'User Name: ${snapshot.data!.docs[index]['userName']}'),
-                                          Text(
-                                              'Email: ${snapshot.data!.docs[index]['userEmail']}'),
-                                          Text(
-                                              'DoB: ${snapshot.data!.docs[index]['dob']}')
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                );
-                              } else if (snapshot.hasError) {
-                                return Center(
-                                    child: Text(snapshot.hasError.toString()));
-                              } else {
-                                return Text('There is No Data');
-                              }
-                            } else {
-                              return Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            }
-                          },
-                        ),
-                        // CircleAvatar(
-                        //   radius: 50,
-                        //   backgroundImage: NetworkImage(currentUser!.userImage),
-                        // ),
-                        // const SizedBox(height: 16),
-                        // Text(
-                        //   currentUser!.name,
-                        //   style: const TextStyle(
-                        //       fontSize: 24, fontWeight: FontWeight.bold),
-                        // ),
-                        // Text(currentUser!.userEmail),
-                        // Text("Username: ${currentUser!.userName}"),
-                        // Text("DOB: ${currentUser!.dob.toDate()}"),
-                        // SizedBox(
-                        //   height: 50,
-                        // ),
-                        ElevatedButton(
-                            onPressed: () {
-                              authControllers.logout();
-                            },
-                            child: Text("LogOut")),
-                      ],
-                    ),
-                  ),
-                )
-              : Center(
-                  child: InkWell(
-                      onTap: () {
-                        authControllers.logout();
-                      },
-                      child: Text('User data not found'))),
     );
   }
 }
 
+
+
+
+
+
+
+
+
+
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:flutter/material.dart';
+// import 'package:get/get.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:signin_signup/Controllers/auth_controllers.dart';
+// import 'package:signin_signup/models/user_model.dart';
+
+// class HomePage extends StatefulWidget {
+//   const HomePage({super.key});
+
+//   @override
+//   State<HomePage> createState() => _HomePageState();
+// }
+
+// AuthControllers authControllers = Get.put(AuthControllers());
+
+// class _HomePageState extends State<HomePage> {
+//   UserModel? currentUser;
+//   bool isLoading = true;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     loadUser();
+//   }
+
+//   Future<void> loadUser() async {
+//     SharedPreferences sp = await SharedPreferences.getInstance();
+//     final uid = sp.getString('uid');
+
+//     if (uid != null && uid.isNotEmpty) {
+//       final userDoc =
+//           await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+//       if (userDoc.exists) {
+//         currentUser = UserModel.fromJson(userDoc.data()!);
+//       }
+//     }
+
+//     setState(() {
+//       isLoading = false;
+//     });
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Home Page'),
+//       ),
+//       body: isLoading
+//           ? const Center(child: CircularProgressIndicator())
+//           : currentUser != null
+//               ? Padding(
+//                   padding: const EdgeInsets.all(16.0),
+//                   child: SingleChildScrollView(
+//                     child: Column(
+//                       children: [
+//                         StreamBuilder(
+//                           stream: FirebaseFirestore.instance
+//                               .collection('users')
+//                               .snapshots(),
+//                           builder: (context, snapshot) {
+//                             if (snapshot.connectionState ==
+//                                 ConnectionState.active) {
+//                               if (snapshot.hasData) {
+//                                 return ListView.builder(
+//                                   shrinkWrap: true,
+//                                   physics: NeverScrollableScrollPhysics(),
+//                                   itemCount: snapshot.data!.docs.length,
+//                                   itemBuilder: (context, index) {
+//                                     return Padding(
+//                                       padding:
+//                                           EdgeInsets.symmetric(vertical: 20),
+//                                       child: Column(
+//                                         crossAxisAlignment:
+//                                             CrossAxisAlignment.start,
+//                                         children: [
+//                                           CircleAvatar(
+//                                             radius: 25,
+//                                             backgroundColor:
+//                                                 Colors.grey.shade300,
+//                                             backgroundImage: AssetImage(snapshot
+//                                                 .data!
+//                                                 .docs[index]['userImage']),
+//                                           ),
+//                                           Text(
+//                                               'Name: ${snapshot.data!.docs[index]['name']}'),
+//                                           Text(
+//                                               'User Name: ${snapshot.data!.docs[index]['userName']}'),
+//                                           Text(
+//                                               'Email: ${snapshot.data!.docs[index]['userEmail']}'),
+//                                           Text(
+//                                               'DoB: ${snapshot.data!.docs[index]['dob']}')
+//                                         ],
+//                                       ),
+//                                     );
+//                                   },
+//                                 );
+//                               } else if (snapshot.hasError) {
+//                                 return Center(
+//                                     child: Text(snapshot.hasError.toString()));
+//                               } else {
+//                                 return Text('There is No Data');
+//                               }
+//                             } else {
+//                               return Center(
+//                                 child: CircularProgressIndicator(),
+//                               );
+//                             }
+//                           },
+//                         ),
+//                         // CircleAvatar(
+//                         //   radius: 50,
+//                         //   backgroundImage: NetworkImage(currentUser!.userImage),
+//                         // ),
+//                         // const SizedBox(height: 16),
+//                         // Text(
+//                         //   currentUser!.name,
+//                         //   style: const TextStyle(
+//                         //       fontSize: 24, fontWeight: FontWeight.bold),
+//                         // ),
+//                         // Text(currentUser!.userEmail),
+//                         // Text("Username: ${currentUser!.userName}"),
+//                         // Text("DOB: ${currentUser!.dob.toDate()}"),
+//                         // SizedBox(
+//                         //   height: 50,
+//                         // ),
+//                         ElevatedButton(
+//                             onPressed: () {
+//                               authControllers.logout();
+//                             },
+//                             child: Text("LogOut")),
+//                       ],
+//                     ),
+//                   ),
+//                 )
+//               : Center(
+//                   child: InkWell(
+//                       onTap: () {
+//                         authControllers.logout();
+//                       },
+//                       child: Text('User data not found'))),
+//     );
+//   }
+// }
 
 
 

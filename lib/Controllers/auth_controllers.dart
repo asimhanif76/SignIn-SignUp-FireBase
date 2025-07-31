@@ -9,7 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signin_signup/Utils/custom_snackbar.dart';
 import 'package:signin_signup/views/home_page.dart';
-import 'package:signin_signup/views/models/user_model.dart';
+import 'package:signin_signup/models/user_model.dart';
 import 'package:signin_signup/views/sign_up_page.dart';
 
 class AuthControllers extends GetxController {

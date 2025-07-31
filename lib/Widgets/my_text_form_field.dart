@@ -5,12 +5,12 @@ class MyTextFormField extends StatefulWidget {
   Icon icon;
   bool isPasswordField;
   TextEditingController controller;
-  FormFieldValidator<String> validator;
+  FormFieldValidator<String>? validator;
 
   MyTextFormField(
       {super.key,
       required this.controller,
-      required this.validator,
+       this.validator,
       required this.hintText,
       this.isPasswordField = false,
       required this.icon});
