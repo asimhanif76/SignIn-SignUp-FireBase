@@ -37,11 +37,7 @@ class AuthControllers extends GetxController {
                 email: emailController.text.trim(),
                 password: passwordController.text.trim());
         if (userCredential.user != null) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomePage(),
-              ));
+          Get.offAll(HomePage());
           CustomSnackbar.show(
             title: "Signup Successful",
             message: "Welcome to the app!",
@@ -135,11 +131,7 @@ class AuthControllers extends GetxController {
           SharedPreferences sp = await SharedPreferences.getInstance();
           await sp.setString('uid', user.uid);
 
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomePage(),
-              ));
+          Get.offAll(HomePage());
 
           CustomSnackbar.show(
             title: "Signup Successful",
@@ -201,5 +193,7 @@ class AuthControllers extends GetxController {
   void logout() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     sp.remove('uid');
+    await FirebaseAuth.instance.signOut();
+    Get.offAll(SignUpPage());
   }
 }

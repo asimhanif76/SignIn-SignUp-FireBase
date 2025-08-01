@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:signin_signup/Controllers/auth_controllers.dart';
 import 'package:signin_signup/Controllers/home_page_controller.dart';
+import 'package:signin_signup/Widgets/my_button.dart';
 import 'package:signin_signup/Widgets/my_text_form_field.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
   HomePageController homePageController = Get.put(HomePageController());
+
+  AuthControllers authControllers = Get.put(AuthControllers());
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +35,7 @@ class HomePage extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10),
               child: MyTextFormField(
-                controller: homePageController.nameController,
+                controller: homePageController.userNameController,
                 hintText: 'User Name',
                 icon: Icon(Icons.person),
               ),
@@ -39,18 +43,61 @@ class HomePage extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10),
               child: MyTextFormField(
-                controller: homePageController.nameController,
+                controller: homePageController.emailController,
                 hintText: 'Email',
+                readOnly: true,
                 icon: Icon(Icons.email),
               ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10),
               child: MyTextFormField(
-                controller: homePageController.nameController,
+                controller: homePageController.dobController,
                 hintText: 'Date of Birth',
                 icon: Icon(Icons.calendar_month),
               ),
+            ),
+            Obx(
+              () => homePageController.isLodingData.value
+                  ? SizedBox(
+                      height: 50,
+                      child: Center(child: CircularProgressIndicator()))
+                  : SizedBox(
+                      height: 50,
+                    ),
+            ),
+            Obx(
+              () => homePageController.isUpdating.value
+                  ? CircularProgressIndicator()
+                  : MyButton(
+                      buttonName: 'Update',
+                      onTap: () {
+                        homePageController.updateProfile();
+                      },
+                    ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Obx(
+              () => homePageController.isDeleting.value
+                  ? CircularProgressIndicator()
+                  : MyButton(
+                      buttonName: 'Delete ',
+                      onTap: () {
+                        homePageController.deleteFields();
+                      },
+                    ),
+            ),
+            Spacer(),
+            MyButton(
+              buttonName: 'LogOut Account',
+              onTap: () {
+                authControllers.logout();
+              },
+            ),
+            SizedBox(
+              height: 20,
             ),
           ],
         ),
@@ -58,6 +105,8 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
+
 
 
 
@@ -161,7 +210,7 @@ class HomePage extends StatelessWidget {
 //                                           Text(
 //                                               'Email: ${snapshot.data!.docs[index]['userEmail']}'),
 //                                           Text(
-//                                               'DoB: ${snapshot.data!.docs[index]['dob']}')
+//                                               'DoB: ${(snapshot.data!.docs[index]['dob']).toDate().toLocal().toString().split(' ')[0]}'),
 //                                         ],
 //                                       ),
 //                                     );

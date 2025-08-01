@@ -4,15 +4,17 @@ class MyTextFormField extends StatefulWidget {
   String hintText;
   Icon icon;
   bool isPasswordField;
+  bool readOnly;
   TextEditingController controller;
   FormFieldValidator<String>? validator;
 
   MyTextFormField(
       {super.key,
       required this.controller,
-       this.validator,
+      this.validator,
       required this.hintText,
       this.isPasswordField = false,
+      this.readOnly = false,
       required this.icon});
 
   @override
@@ -25,6 +27,7 @@ class _MyTextFormFieldState extends State<MyTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      readOnly: widget.readOnly,
       controller: widget.controller,
       decoration: InputDecoration(
         border: OutlineInputBorder(
