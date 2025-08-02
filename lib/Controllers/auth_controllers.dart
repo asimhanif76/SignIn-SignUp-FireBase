@@ -15,7 +15,7 @@ import 'package:signin_signup/views/sign_up_page.dart';
 class AuthControllers extends GetxController {
   RxBool isLoginPage = true.obs;
 
-  final formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>(); 
 
   TextEditingController nameController = TextEditingController();
   TextEditingController userNameController = TextEditingController();
@@ -37,9 +37,16 @@ class AuthControllers extends GetxController {
                 email: emailController.text.trim(),
                 password: passwordController.text.trim());
         if (userCredential.user != null) {
-          Get.offAll(HomePage());
+          String userId = userCredential.user!.uid;
+        SharedPreferences sp = await SharedPreferences.getInstance();
+        await sp.setString('uid', userId);
+        isLoding.value = false;
+            Navigator.pushReplacement(
+            context,    
+            MaterialPageRoute(builder: (context) => HomePage()),
+            );
           CustomSnackbar.show(
-            title: "Signup Successful",
+            title: "Signup Successful",   
             message: "Welcome to the app!",
             backgroundColor: Colors.green,
             icon: Icons.check_circle,
@@ -47,10 +54,7 @@ class AuthControllers extends GetxController {
           emailController.clear();
           passwordController.clear();
         }
-        String userId = userCredential.user!.uid;
-        SharedPreferences sp = await SharedPreferences.getInstance();
-        await sp.setString('uid', userId);
-        isLoding.value = false;
+        
       } catch (e) {
         print("Exception:  $e");
         CustomSnackbar.show(
@@ -172,23 +176,23 @@ class AuthControllers extends GetxController {
     isLoginPage.toggle();
   }
 
-  void isUserLogedin(BuildContext context) async {
-    SharedPreferences sp = await SharedPreferences.getInstance();
-    final uid = sp.getString('uid');
-    if (uid != null && uid.isNotEmpty) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomePage(),
-          ));
-    } else {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SignUpPage(),
-          ));
-    }
-  }
+  // void isUserLogedin(BuildContext context) async {
+  //   SharedPreferences sp = await SharedPreferences.getInstance();
+  //   final uid = sp.getString('uid');
+  //   if (uid != null && uid.isNotEmpty) {
+  //     Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => HomePage(),
+  //         ));
+  //   } else {
+  //     Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => SignUpPage(),
+  //         ));
+  //   }
+  // }
 
   void logout() async {
     SharedPreferences sp = await SharedPreferences.getInstance();

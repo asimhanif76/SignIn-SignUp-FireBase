@@ -15,91 +15,130 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: 20,
-        ),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 100,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: MyTextFormField(
-                controller: homePageController.nameController,
-                hintText: 'Name',
-                icon: Icon(Icons.person),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: MyTextFormField(
-                controller: homePageController.userNameController,
-                hintText: 'User Name',
-                icon: Icon(Icons.person),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: MyTextFormField(
-                controller: homePageController.emailController,
-                hintText: 'Email',
-                readOnly: true,
-                icon: Icon(Icons.email),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: MyTextFormField(
-                controller: homePageController.dobController,
-                hintText: 'Date of Birth',
-                icon: Icon(Icons.calendar_month),
-              ),
-            ),
-            Obx(
-              () => homePageController.isLodingData.value
-                  ? SizedBox(
-                      height: 50,
-                      child: Center(child: CircularProgressIndicator()))
-                  : SizedBox(
-                      height: 50,
+      body: SingleChildScrollView(
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    Obx(
+                      () => homePageController.isLodingData.value
+                          ? SizedBox(
+                              height: 100,
+                              child: Center(
+                                  child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Transform.scale(
+                                      scale: 0.7,
+                                      child: CircularProgressIndicator()),
+                                  Text('Loading Data...'),
+                                ],
+                              )))
+                          : SizedBox(
+                              height: 100,
+                            ),
                     ),
-            ),
-            Obx(
-              () => homePageController.isUpdating.value
-                  ? CircularProgressIndicator()
-                  : MyButton(
-                      buttonName: 'Update',
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: MyTextFormField(
+                        controller: homePageController.nameController,
+                        hintText: 'Name',
+                        icon: Icon(Icons.person),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: MyTextFormField(
+                        controller: homePageController.userNameController,
+                        hintText: 'User Name',
+                        icon: Icon(Icons.person),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: MyTextFormField(
+                        controller: homePageController.emailController,
+                        hintText: 'Email',
+                        readOnly: true,
+                        icon: Icon(Icons.email),
+                      ),
+                    ),
+                    TextFormField(
+                      controller: homePageController.dobController,
+                      validator: (value) {
+                        if (value == '') {
+                          return 'Enter Date Of Birth';
+                        } else {
+                          return null;
+                        }
+                      },
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          hintText: 'Date Of Birth',
+                          suffixIcon: IconButton(
+                              onPressed: () async {
+                                DateTime? pickedDate = await showDatePicker(
+                                  context: context,
+                                  firstDate: DateTime(1970),
+                                  lastDate: DateTime.now(),
+                                );
+
+                                if (pickedDate != null) {
+                                  homePageController.dob = pickedDate;
+                                  String formattedDate =
+                                      "${pickedDate.day.toString().padLeft(2, '0')}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.year}";
+                                  homePageController.dobController.text =
+                                      formattedDate;
+                                }
+                              },
+                              icon: Icon(Icons.calendar_month))),
+                      readOnly: true,
+                    ),
+                    SizedBox(height: 50),
+                    Obx(
+                      () => homePageController.isUpdating.value
+                          ? CircularProgressIndicator()
+                          : MyButton(
+                              buttonName: 'Update',
+                              onTap: () {
+                                homePageController.updateProfile();
+                              },
+                            ),
+                    ),
+                    SizedBox(height: 20),
+                    Obx(
+                      () => homePageController.isDeleting.value
+                          ? CircularProgressIndicator()
+                          : MyButton(
+                              buttonName: 'Delete ',
+                              onTap: () {
+                                homePageController.deleteFields();
+                              },
+                            ),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    MyButton(
+                      buttonName: 'LogOut Account',
                       onTap: () {
-                        homePageController.updateProfile();
+                        authControllers.logout();
                       },
                     ),
+                    SizedBox(height: 20),
+                  ],
+                ),
+              ],
             ),
-            SizedBox(
-              height: 20,
-            ),
-            Obx(
-              () => homePageController.isDeleting.value
-                  ? CircularProgressIndicator()
-                  : MyButton(
-                      buttonName: 'Delete ',
-                      onTap: () {
-                        homePageController.deleteFields();
-                      },
-                    ),
-            ),
-            Spacer(),
-            MyButton(
-              buttonName: 'LogOut Account',
-              onTap: () {
-                authControllers.logout();
-              },
-            ),
-            SizedBox(
-              height: 20,
-            ),
-          ],
+          ),
         ),
       ),
     );
