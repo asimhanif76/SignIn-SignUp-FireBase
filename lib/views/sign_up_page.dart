@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:signin_signup/Commons/app_images.dart';
 import 'package:signin_signup/Commons/app_strings.dart';
 import 'package:signin_signup/Controllers/auth_controllers.dart';
 import 'package:signin_signup/Utils/email_password_validators.dart';
@@ -72,7 +73,7 @@ class SignUpPage extends StatelessWidget {
                                         .imagePath.value.isNotEmpty
                                     ? getProfileImage(
                                         authControllers.imagePath.value)
-                                    : AssetImage('assets/images/Facebook.png'),
+                                    : AssetImage(AppImages.facebook),
                                 radius: 50,
                               ),
                               Positioned(
