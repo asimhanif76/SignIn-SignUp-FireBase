@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:signin_signup/Commons/app_strings.dart';
 import 'package:signin_signup/Controllers/auth_controllers.dart';
 import 'package:signin_signup/Controllers/home_page_controller.dart';
 import 'package:signin_signup/Widgets/my_button.dart';
@@ -36,7 +37,7 @@ class HomePage extends StatelessWidget {
                                   Transform.scale(
                                       scale: 0.7,
                                       child: CircularProgressIndicator()),
-                                  Text('Loading Data...'),
+                                  Text(AppStrings.loading_data),
                                 ],
                               )))
                           : SizedBox(
@@ -128,7 +129,7 @@ class HomePage extends StatelessWidget {
                 Column(
                   children: [
                     MyButton(
-                      buttonName: 'LogOut Account',
+                      buttonName: AppStrings.logout_account,
                       onTap: () {
                         authControllers.logout();
                       },

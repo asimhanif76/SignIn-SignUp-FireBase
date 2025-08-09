@@ -15,4 +15,6 @@ class AppStrings {
   static String sign_in_with_facebook = "Sign In With Facebook";
   static String dont_have_an_account = "Don’t have an account? ";
   static String you_already_have_an_account = 'You already have an account? ';
+  static String loading_data = 'Loading Data...';
+  static String logout_account = 'LogOut Account';
 }
